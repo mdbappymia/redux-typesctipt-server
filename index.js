@@ -44,6 +44,34 @@ const run = async () => {
         .toArray();
       res.json(result);
     });
+
+    // get all bike
+    app.get("/bikes", async (req, res) => {
+      const result = await client
+        .db("bike_bazar")
+        .collection("products")
+        .find({})
+        .toArray();
+      res.json(result);
+    });
+    // get all electronics product
+    app.get("/electronics", async (req, res) => {
+      const result = await client
+        .db("online_shop")
+        .collection("productCollection")
+        .find({})
+        .toArray();
+      res.json(result);
+    });
+    app.get("/random", async (req, res) => {
+      const result = await client
+        .db(req.query.d)
+        .collection(req.query.c)
+        .findOne({
+          _id: ObjectId(req.query.id),
+        });
+      res.json(result);
+    });
   } finally {
   }
 };
