@@ -21,10 +21,12 @@ const run = async () => {
     // databases
     const travelBD = client.db("travel-bangladesh");
     const travelAdventure = client.db("travel-adventures");
+    const combineOrders = client.db("combine_product_service_orders");
 
     // collections
     const serviceCollection = travelBD.collection("serviceCollection");
     const travelAdventurePlaceCollection = travelAdventure.collection("places");
+    const bookedPlaceCollection = combineOrders.collection("booked_place");
 
     // get all travel bd service
     app.get("/bd-places", async (req, res) => {
@@ -63,6 +65,8 @@ const run = async () => {
         .toArray();
       res.json(result);
     });
+
+    // get single data using id
     app.get("/random", async (req, res) => {
       const result = await client
         .db(req.query.d)
@@ -70,6 +74,13 @@ const run = async () => {
         .findOne({
           _id: ObjectId(req.query.id),
         });
+      res.json(result);
+    });
+
+    // post travel place order
+    app.post("/booked_place", async (req, res) => {
+      const bookedData = req.body;
+      const result = await bookedPlaceCollection.insertOne(bookedData);
       res.json(result);
     });
   } finally {
