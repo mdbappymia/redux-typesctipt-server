@@ -27,6 +27,7 @@ const run = async () => {
     const serviceCollection = travelBD.collection("serviceCollection");
     const travelAdventurePlaceCollection = travelAdventure.collection("places");
     const bookedPlaceCollection = combineOrders.collection("booked_place");
+    const ordersCollection = combineOrders.collection("orders");
 
     // get all travel bd service
     app.get("/bd-places", async (req, res) => {
@@ -81,6 +82,33 @@ const run = async () => {
     app.post("/booked_place", async (req, res) => {
       const bookedData = req.body;
       const result = await bookedPlaceCollection.insertOne(bookedData);
+      res.json(result);
+    });
+
+    // get all booking place by id
+    app.get("/booked_place/:uid", async (req, res) => {
+      const uid = req.params.uid;
+      const result = await bookedPlaceCollection
+        .find({ user_id: uid })
+        .toArray();
+      res.json(result);
+    });
+    // delete single booking place
+    app.delete("/booking/:id", async (req, res) => {
+      const result = await bookedPlaceCollection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.json(result);
+    });
+    // post an orders
+    app.post("/orders", async (req, res) => {
+      const order = req.body;
+      const result = await ordersCollection.insertOne(order);
+      res.json(result);
+    });
+    // get all orders
+    app.get("/orders", async (req, res) => {
+      const result = await ordersCollection.find({}).toArray();
       res.json(result);
     });
   } finally {
