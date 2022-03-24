@@ -111,6 +111,12 @@ const run = async () => {
       const result = await ordersCollection.find({}).toArray();
       res.json(result);
     });
+    // delete an order
+    app.delete("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await ordersCollection.deleteOne({ _id: ObjectId(id) });
+      res.json(result);
+    });
   } finally {
   }
 };
